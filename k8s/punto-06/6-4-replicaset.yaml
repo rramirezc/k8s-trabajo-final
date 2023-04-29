@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: rs-api-persona
+  namespace: name1
+  labels:
+    app: rs-api-persona
+spec:
+  replicas: 2
+  selector:
+    matchLabels: 
+      app: rs-api-persona
+  template:
+    metadata:
+      labels:
+        app: rs-api-persona
+    spec:
+      nodeSelector:
+        node: workloads
+      containers:
+      - image: rramirezc21/imagen-api-persona:1.0.0
+        name: api-persona
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        env:
+        - name: host
+          valueFrom:
+            configMapKeyRef:
+              name: configmap-api
+              key: host
+        - name: port
+          valueFrom:
+            configMapKeyRef:
+              name: configmap-api
+              key: port
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: configmap-api
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_ROOT_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: configmap-api
+              key: MYSQL_ROOT_HOST
+        - name: MYSQL_DB_HOST
+          value: mysql
+      restartPolicy: Always #valores posibles -> Always, OnFailure, Never

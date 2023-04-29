@@ -1,0 +1,2 @@
+kubectl create ns name1
+kubectl create ns name2

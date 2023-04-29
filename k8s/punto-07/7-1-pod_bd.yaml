@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bdapipersona
+  namespace: name2
+  labels:
+    app: bdapipersona
+spec:
+  selector:
+    matchLabels:
+      app: bdapipersona
+  replicas: 1
+  serviceName: "bdapipersona"
+  template: 
+    metadata:
+      labels:
+        app: bdapipersona
+    spec:
+      containers:
+        - name: bd   
+          image: wjma90/clase-1-mysql
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: toor
+          - name: MYSQL_ROOT_HOST
+            value: "%"
+          ports:
+              - containerPort: 3306
+      restartPolicy: Always #valores posibles -> Always, OnFailure, Never

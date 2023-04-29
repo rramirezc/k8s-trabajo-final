@@ -1,0 +1,44 @@
+apiVersion: k3d.io/v1alpha4
+kind: Simple
+metadata:
+  name: myclusterbasic
+image: rancher/k3s:v1.23.16-k3s1
+servers: 1
+agents: 2
+ports:
+ - port: 80:80 # same as `--port 8080:80@loadbalancer
+   nodeFilters:
+   - loadbalancer
+ - port: 443:443 # same as `--port 8080:80@loadbalancer
+   nodeFilters:
+   - loadbalancer
+volumes:
+- volume: "D:/Cursos/DocKubCloud/Modulo 03/ingress-k3d/ingress/addon-ingress-traefik-v2.yaml:/var/lib/rancher/k3s/server/manifests/traefik-v2.yaml"
+  nodeFilters:
+  - server:*
+# - volume: "/Users/willianmarchan/Projects/Mitocode/3-k8s-practice/environments/k3d/addon-ingress-nginx.yaml:/var/lib/rancher/k3s/server/manifests/ingress-nginx.yaml"
+#   nodeFilters:
+#   - server:*
+options:
+ k3d: 
+   wait: true 
+   timeout: "60s"
+   disableLoadbalancer: false
+ k3s:
+   extraArgs:
+   - arg: --no-deploy=traefik
+     nodeFilters:
+     - server:*
+   - arg: --tls-san=my.host.domain
+     nodeFilters:
+     - server:*
+   nodeLabels:
+   - label: node=system
+     nodeFilters:
+     - agent:0
+   - label: node=workloads
+     nodeFilters:
+     - agent:1
+ kubeconfig:
+   updateDefaultKubeconfig: true
+   switchCurrentContext: true

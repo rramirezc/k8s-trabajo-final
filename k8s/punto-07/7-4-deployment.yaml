@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-apipersona
+  namespace: name2
+  labels:
+    app: deploy-apipersona
+spec:
+  selector:
+    matchLabels:
+      app: deploy-apipersona
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: deploy-apipersona
+    spec:
+      containers:
+      - image: rramirezc21/imagen-api-persona:1.0.0
+        name: api-persona
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        env:
+        - name: host
+          valueFrom:
+            secretKeyRef:
+              name: secret-apipersona
+              key: host
+        - name: port
+          valueFrom:
+            secretKeyRef:
+              name: secret-apipersona
+              key: port
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret-apipersona
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_ROOT_HOST
+          valueFrom:
+            secretKeyRef:
+              name: secret-apipersona
+              key: MYSQL_ROOT_HOST
+        - name: MYSQL_DB_HOST
+          value: mysql
+      restartPolicy: Always #valores posibles -> Always, OnFailure, Never

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bdapipersona
+  namespace: name1
+  labels:
+    app: bdapipersona
+    version: v1
+spec:
+  containers:
+   - name: bd   
+     image: wjma90/clase-1-mysql
+     env:
+     - name: MYSQL_ROOT_PASSWORD
+       value: toor
+     - name: MYSQL_ROOT_HOST
+       value: "%"
+     ports:
+        - containerPort: 3306
+  restartPolicy: OnFailure #valores posibles -> Always, OnFailure, Never
